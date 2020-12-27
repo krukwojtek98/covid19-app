@@ -1,0 +1,106 @@
+<div class="header">Global Stats</div>
+
+<div style="margin-bottom: 25px;" fxLayout="row" fxLayoutAlign="space-between center" fxLayout.xs = 'column' fxLayout.sm = 'column' fxLayout.md = 'column'>
+  
+  
+  <mat-card fxFlex='33' *ngIf="showCards" class="example-card" style="background-color: rgb(217 181 13); margin-top: 5%; margin-left: auto; margin-right: auto; text-align: center; align-items: center;">
+    <mat-card-header style="margin-top: 5px;">
+      <mat-card-title>Total confirmed:</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p style="font-size: 55px; margin-top: 30px;">{{globalStats.TotalConfirmed | formatNumber}}</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <p style="font-size: 25px; margin-top: 10px; font-weight: 500;">+ {{globalStats.NewConfirmed | formatNumber}}</p>
+    </mat-card-actions>
+  </mat-card>
+  <mat-card fxFlex='33' *ngIf="showCards" class="example-card" style="background-color: rgb(26 182 26); margin-top: 5%; margin-left: auto; margin-right: auto; text-align: center; align-items: center;">
+    <mat-card-header style="margin-top: 5px;">
+      <mat-card-title>Total recovered:</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p style="font-size: 55px; margin-top: 30px;">{{globalStats.TotalRecovered | formatNumber}}</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <p style="font-size: 25px; margin-top: 10px; font-weight: 500;">+ {{globalStats.NewRecovered | formatNumber}}</p>
+    </mat-card-actions>
+  </mat-card>
+  <mat-card fxFlex='33' *ngIf="showCards" class="example-card" style="background-color:  rgb(255 57 57); margin-top: 5%; margin-left: auto; margin-right: auto; text-align: center; align-items: center;">
+    <mat-card-header style="margin-top: 5px;">
+      <mat-card-title>Total deaths:</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p style="font-size: 55px; margin-top: 30px; ">{{globalStats.TotalDeaths | formatNumber}}</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <p style="font-size: 25px; margin-top: 10px; font-weight: 500;">+ {{globalStats.NewDeaths | formatNumber}}</p>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<div fxLayout="row" fxLayout.xs = 'column' fxLayout.sm = 'column' fxLayout.md = 'column' fxLayoutAlign="space-between center" style="margin-top: 5%; margin-left: auto; margin-right: auto; text-align: center; align-items: center;">
+  <div fxFlex='70' style="margin-left: auto; margin-right: auto; text-align: center; align-items: center;"> 
+  <mat-tab-group  mat-align-tabs="center" *ngIf='newConfirmedChartShow && newRecoveredChartShow && newDeathsChartShow ' style="background-color: #6e396a; border: solid; border-color: black; border-radius: 10px;"> 
+      <mat-tab label="New confirmed">
+        <div  class="example-container2 mat-elevation-z8">
+          <canvas baseChart 
+              [datasets]="lineChartDataNewConfirmed" 
+              [labels]="lineChartLabelsNewConfirmed" 
+              [options]="lineChartOptions"
+              [colors]="lineChartColorsNewConfirmed" 
+              [legend]="lineChartLegend" 
+              [chartType]="lineChartType" 
+              [plugins]="lineChartPlugins">
+          </canvas>
+        </div>
+      </mat-tab>
+      <mat-tab label="New Recovered">
+        <div  class="example-container2 mat-elevation-z8">
+          <canvas baseChart 
+              [datasets]="lineChartDataNewRecovered" 
+              [labels]="lineChartLabelsNewRecovered" 
+              [options]="lineChartOptions"
+              [colors]="lineChartColorsNewRecovered" 
+              [legend]="lineChartLegend" 
+              [chartType]="lineChartType" 
+              [plugins]="lineChartPlugins">
+          </canvas>
+        </div>
+      </mat-tab>
+      <mat-tab label="New Deaths">
+        <div  class="example-container2 mat-elevation-z8">
+          <canvas baseChart 
+              [datasets]="lineChartDataNewDeaths" 
+              [labels]="lineChartLabelsNewDeaths" 
+              [options]="lineChartOptions"
+              [colors]="lineChartColorsNewDeaths" 
+              [legend]="lineChartLegend" 
+              [chartType]="lineChartType" 
+              [plugins]="lineChartPlugins">
+          </canvas>
+        </div>
+      </mat-tab>
+  </mat-tab-group>
+  </div>
+  
+  
+
+
+  <div fxFlex *ngIf='newDoughnutChartShow' class=" mat-elevation-z8" style="background-color: #6e396a; border: solid; border-color: black; border-radius: 10px; margin-left: auto; margin-right: auto; text-align: center; align-items: center;">
+    <canvas baseChart 
+        [datasets]="doughnutChartData" 
+        [labels]="doughnutChartLabels" 
+        [options]="doughnutChartOptions"
+        [colors]="doughnutChartColors" 
+        [legend]="doughnutChartLegend" 
+        [chartType]="doughnutChartType" >
+    </canvas>
+  </div>
+
+    
+  
+  
+</div>
+
+
+
