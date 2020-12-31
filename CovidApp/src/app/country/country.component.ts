@@ -88,10 +88,24 @@ export class CountryComponent implements OnInit, AfterViewInit {
     }
   };
 
-  lineChartColors: Color[] = [
+  lineChartColorsNewDeaths: Color[] = [
     {
       borderColor: 'black',
-      backgroundColor: 'rgba(255,255,0,0.28)',
+      backgroundColor: 'rgb(255 57 57)',
+    },
+  ];
+
+  lineChartColorsActive: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgb(217 181 13)',
+    },
+  ];
+
+  lineChartColorsNewRecovered: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgb(26 182 26)',
     },
   ];
 
@@ -117,7 +131,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
               this.isLoadingResults = false;
               this.isRateLimitReached = false;
               if (data.Message === 'Caching in progress') {
-                console.log('Test buforu');
                 this.openDialog();
               }
               return data.Countries;
@@ -156,7 +169,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   showCharts(country: string): void {
-    console.log(country);
     this.summaryService = new SummaryStatsService(this.http);
     merge()
           .pipe(
@@ -179,8 +191,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
                 this.countryLiveStats = data;
                 this.createLineChartActive(this.countryLiveStats);
                 this.createLineChartConfirmed(this.countryLiveStats);
-                this.createLineChartDeaths(this.countryLiveStats);
-                this.createLineChartRecovered(this.countryLiveStats);
+                this.createLineChartNewDeaths(this.countryLiveStats);
+                this.createLineChartNewRecovered(this.countryLiveStats);
 
                 console.log(this.countryLiveStats);
               },
@@ -196,7 +208,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.lineChartLabelsActive = [];
     // tslint:disable-next-line:prefer-for-of
     for (let index = 0; index < countriesStats.length; index++) {
-      this.lineChartLabelsActive.push(countriesStats[index].Date);
+      this.lineChartLabelsActive.push(this.dateFormat.transform(countriesStats[index].Date));
       data1.push(countriesStats[index].Active);
     }
     this.lineChartDataActive.push(
@@ -243,19 +255,21 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   }
 
-  createLineChartDeaths(countriesStats: CountryLive[]): void {
+  createLineChartNewDeaths(countriesStats: CountryLive[]): void {
     const data1 = [];
     this.lineChartDataDeaths = [];
     this.lineChartLabelsDeaths = [];
     // tslint:disable-next-line:prefer-for-of
     for (let index = 0; index < countriesStats.length; index++) {
-      this.lineChartLabelsDeaths.push(this.dateFormat.transform( countriesStats[index].Date));
-      data1.push(countriesStats[index].Deaths);
+      if ( index + 1 <= countriesStats.length - 1) {
+        this.lineChartLabelsDeaths.push(this.dateFormat.transform( countriesStats[index + 1].Date));
+        data1.push(countriesStats[index + 1].Deaths - countriesStats[index].Deaths);
+      }
     }
     this.lineChartDataDeaths.push(
       {
         data: data1,
-        label: 'Deaths'
+        label: 'New Deaths'
       }
     );
     this.showChartDeaths = true;
@@ -263,19 +277,21 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   }
 
-  createLineChartRecovered(countriesStats: CountryLive[]): void {
+  createLineChartNewRecovered(countriesStats: CountryLive[]): void {
     const data1 = [];
     this.lineChartDataRecovered = [];
     this.lineChartLabelsRecovered = [];
     // tslint:disable-next-line:prefer-for-of
     for (let index = 0; index < countriesStats.length; index++) {
-      this.lineChartLabelsRecovered.push(this.dateFormat.transform( countriesStats[index].Date));
-      data1.push(countriesStats[index].Recovered);
+      if ( index + 1 <= countriesStats.length - 1) {
+        this.lineChartLabelsRecovered.push(this.dateFormat.transform( countriesStats[index + 1].Date));
+        data1.push(countriesStats[index + 1].Recovered - countriesStats[index].Recovered);
+      }
     }
     this.lineChartDataRecovered.push(
       {
         data: data1,
-        label: 'Recovered'
+        label: 'New Recovered'
       }
     );
     this.showChartRecovered = true;

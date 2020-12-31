@@ -123,19 +123,15 @@ export class HomeComponent implements OnInit {
               return this.summaryService.getSummary();
             }),
             map(data => {
-              console.log(data);
-              // if (data.Message === 'Caching in progress') {
-              //   console.log('Test buforu');
-              //   this.openDialog();
-              // }
+              if (data.Message === 'Caching in progress') {
+                this.openDialog();
+              }
               return data;
             }))
             .subscribe(
               data => {
                 this.date = data.Date;
-                console.log(this.date);
                 this.globalStats = data.Global;
-                console.log(this.globalStats);
                 this.showCards = true;
                 merge()
                   .pipe(
@@ -179,10 +175,7 @@ export class HomeComponent implements OnInit {
       data1.push(dataTocharts[index].NewRecovered);
       firstDate.setDate(firstDate.getDate() + 1);
     }
-    // pokminić czy na pewno summary zwraca bez dzisiejszego
-    data1.push(this.globalStats.NewRecovered);
-    this.lineChartLabelsNewRecovered.push(this.date1.transform(firstDate.toString()));
-    firstDate.setDate(firstDate.getDate() + 1);
+
     this.lineChartDataNewRecovered.push(
       {
         data: data1,
@@ -206,9 +199,7 @@ export class HomeComponent implements OnInit {
       data1.push(dataTocharts[index].NewConfirmed);
       firstDate.setDate(firstDate.getDate() + 1);
     }
-    data1.push(this.globalStats.NewConfirmed);
-    this.lineChartLabelsNewConfirmed.push(this.date1.transform(firstDate.toString()));
-    firstDate.setDate(firstDate.getDate() + 1);
+
     this.lineChartDataNewConfirmed.push(
       {
         data: data1,
@@ -231,9 +222,7 @@ export class HomeComponent implements OnInit {
       data1.push(dataTocharts[index].NewDeaths);
       firstDate.setDate(firstDate.getDate() + 1);
     }
-    data1.push(this.globalStats.NewDeaths);
-    this.lineChartLabelsNewDeaths.push(this.date1.transform(firstDate.toString()));
-    firstDate.setDate(firstDate.getDate() + 1);
+
     this.lineChartDataNewDeaths.push(
       {
         data: data1,

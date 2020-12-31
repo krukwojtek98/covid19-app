@@ -18,7 +18,6 @@ export class ErrorInterceptor implements HttpInterceptor {
             else if (err.status === 502) {
               this.openDialog502();
             }
-
             const error = err.error.message || err.statusText;
             return throwError(error);
         }));
@@ -31,7 +30,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           disableClose: true,
           data: {
             header: 'ERROR 503',
-            p1: 'The server is not responding',
+            p1: 'The server is not responding.',
             p2: 'Please refresh the page.',
             p3: ''
           }

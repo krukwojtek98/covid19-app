@@ -47,9 +47,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     line-height: 50px;
   }
   .example-card {
-    max-width: 450px;
-    min-width: 150px;
-    /* width: 450px; */
+    min-width: 320px;
     border-radius: 10px!important;
   }
 
@@ -68,7 +66,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .example-container2 {
   position: relative;
   /* min-height: 200px; */
-  width: 100%;
+  width: 90%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 20px;

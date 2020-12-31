@@ -42,10 +42,10 @@ export class AppComponent implements OnInit, OnDestroy{
               return this.summaryService.getSummary();
             }),
             map(data => {
-              // if (data.Message === 'Caching in progress') {
-              //   console.log('Test buforu');
-              //   this.openDialog();
-              // }
+              if (data.Message === 'Caching in progress') {
+                console.log('Test buforu');
+                this.openDialog();
+              }
               return data;
             }))
             .subscribe(
