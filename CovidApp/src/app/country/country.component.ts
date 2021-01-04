@@ -30,11 +30,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
 
   displayedColumns: string[] = ['select', 'Country', 'Total confirmed', 'New confirmed', 'Total deaths', 'New deaths', 'Total recovered', 'New recovered'];
+  displayedColumnsHidden: string[] = ['Country', 'Total confirmed', 'New confirmed', 'Total deaths', 'New deaths', 'Total recovered', 'New recovered'];
+
   summaryService: SummaryStatsService | null;
 
   countryStats: Countries[] = [];
-  // dataFromCheckbox = [];
   dataSource = new MatTableDataSource<Countries>();
+  dataSourceHidden = new MatTableDataSource<Countries>();
+
   selection = new SelectionModel<Countries>(false);
 
   resultsLength = 0;
@@ -146,6 +149,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
                 // this.countryStats = data;
                 this.dataSource.data = data.slice();
                 this.dataSource.sort = this.sort;
+                this.dataSourceHidden.data = data.slice();
+                this.dataSourceHidden.sort = this.sort;
               },
               error => {
                 console.log(error);
@@ -189,12 +194,12 @@ export class CountryComponent implements OnInit, AfterViewInit {
             .subscribe(
               data => {
                 this.countryLiveStats = data;
+                console.log(this.countryLiveStats);
                 this.createLineChartActive(this.countryLiveStats);
-                this.createLineChartConfirmed(this.countryLiveStats);
+                // this.createLineChartConfirmed(this.countryLiveStats);
                 this.createLineChartNewDeaths(this.countryLiveStats);
                 this.createLineChartNewRecovered(this.countryLiveStats);
-
-                console.log(this.countryLiveStats);
+                this.showChartsTabs = true;
               },
               error => {
                 console.log(error);
@@ -222,38 +227,38 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   }
 
-  createLineChartConfirmed(countriesStats: CountryLive[]): void {
-    const data1 = [];
-    const data2 = [];
-    const data3 = [];
+  // createLineChartConfirmed(countriesStats: CountryLive[]): void {
+  //   const data1 = [];
+  //   const data2 = [];
+  //   const data3 = [];
 
-    this.lineChartDataConfirmed = [];
-    this.lineChartLabelsConfirmed = [];
-    // tslint:disable-next-line:prefer-for-of
-    for (let index = 0; index < countriesStats.length; index++) {
-      this.lineChartLabelsConfirmed.push(this.dateFormat.transform( countriesStats[index].Date));
-      data1.push(countriesStats[index].Confirmed);
-      data2.push(countriesStats[index].Recovered);
-      data3.push(countriesStats[index].Deaths);
-    }
-    this.lineChartDataConfirmed.push(
-      {
-        data: data1,
-        label: 'Confirmed',
-      },
-      {
-        data: data2,
-        label: 'Recovered'
-      },
-      {
-        data: data3,
-        label: 'Deaths'
-      }
-    );
-    this.showChartConfirmed = true;
-    this.showChartsTabs = true;
+  //   this.lineChartDataConfirmed = [];
+  //   this.lineChartLabelsConfirmed = [];
+  //   // tslint:disable-next-line:prefer-for-of
+  //   for (let index = 0; index < countriesStats.length; index++) {
+  //     this.lineChartLabelsConfirmed.push(this.dateFormat.transform( countriesStats[index].Date));
+  //     data1.push(countriesStats[index].Confirmed);
+  //     data2.push(countriesStats[index].Recovered);
+  //     data3.push(countriesStats[index].Deaths);
+  //   }
+  //   this.lineChartDataConfirmed.push(
+  //     {
+  //       data: data1,
+  //       label: 'Confirmed',
+  //     },
+  //     {
+  //       data: data2,
+  //       label: 'Recovered'
+  //     },
+  //     {
+  //       data: data3,
+  //       label: 'Deaths'
+  //     }
+  //   );
+  //   this.showChartConfirmed = true;
+  //   this.showChartsTabs = true;
 
-  }
+  // }
 
   createLineChartNewDeaths(countriesStats: CountryLive[]): void {
     const data1 = [];
@@ -261,15 +266,24 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.lineChartLabelsDeaths = [];
     // tslint:disable-next-line:prefer-for-of
     for (let index = 0; index < countriesStats.length; index++) {
-      if ( index + 1 <= countriesStats.length - 1) {
-        this.lineChartLabelsDeaths.push(this.dateFormat.transform( countriesStats[index + 1].Date));
-        data1.push(countriesStats[index + 1].Deaths - countriesStats[index].Deaths);
-      }
+        this.lineChartLabelsDeaths.push(this.dateFormat.transform( countriesStats[index].Date));
+        data1.push(countriesStats[index].Deaths);
+      // if ( index + 1 <= countriesStats.length - 1) {
+      //   this.lineChartLabelsDeaths.push(this.dateFormat.transform( countriesStats[index + 1].Date));
+      //   if (countriesStats[index + 1].Deaths - countriesStats[index].Deaths < 0){
+      //     data1.push(countriesStats[index].Deaths);
+
+      //   }
+      //   else{
+      //     data1.push(countriesStats[index + 1].Deaths - countriesStats[index].Deaths);
+
+      //   }
+      // }
     }
     this.lineChartDataDeaths.push(
       {
         data: data1,
-        label: 'New Deaths'
+        label: 'Total Deaths'
       }
     );
     this.showChartDeaths = true;
@@ -283,15 +297,17 @@ export class CountryComponent implements OnInit, AfterViewInit {
     this.lineChartLabelsRecovered = [];
     // tslint:disable-next-line:prefer-for-of
     for (let index = 0; index < countriesStats.length; index++) {
-      if ( index + 1 <= countriesStats.length - 1) {
-        this.lineChartLabelsRecovered.push(this.dateFormat.transform( countriesStats[index + 1].Date));
-        data1.push(countriesStats[index + 1].Recovered - countriesStats[index].Recovered);
-      }
+      this.lineChartLabelsRecovered.push(this.dateFormat.transform( countriesStats[index].Date));
+      data1.push(countriesStats[index].Recovered);
+      // if ( index + 1 <= countriesStats.length - 1) {
+      //   this.lineChartLabelsRecovered.push(this.dateFormat.transform( countriesStats[index + 1].Date));
+      //   data1.push(countriesStats[index + 1].Recovered - countriesStats[index].Recovered);
+      // }
     }
     this.lineChartDataRecovered.push(
       {
         data: data1,
-        label: 'New Recovered'
+        label: 'Total Recovered'
       }
     );
     this.showChartRecovered = true;
@@ -303,7 +319,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'test.xlsx');
+    XLSX.writeFile(wb, 'covid19stats.xlsx');
   }
 
   exportToPdf(): void {
@@ -324,7 +340,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
       head: [['Country', 'Total Confirmed', 'New Confirmed', 'Total Deaths', 'New Deaths', 'Total Recovered', 'New Recovered']],
       body: tmpFull
     });
-    doc.save('testPDF.pdf');
+    doc.save('covid19stats.pdf');
   }
 
   sortData(sort: Sort): void {

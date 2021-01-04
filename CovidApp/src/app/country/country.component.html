@@ -13,14 +13,10 @@
         <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Poland" #input>
     </mat-form-field>
 
-    <!-- <div  fxLayout="row" fxLayoutAlign="space-around center" fxLayout.xs = 'column' style="margin-top: 5%; ">
-      <button mat-raised-button color="primary" (click)="exportToExcel()">Export as Excel <mat-icon>table_view</mat-icon></button>
-      <button mat-raised-button color="primary" (click)="exportToPdf()">Export as PDF <mat-icon>picture_as_pdf</mat-icon></button>
-    </div> -->
 
-    <div class="example-table-container" #TABLE>
+    <div class="example-table-container" >
 
-      <table mat-table [dataSource]="dataSource" class="example-table" matSort  #table (matSortChange)="sortData($event)">
+      <table mat-table [dataSource]="dataSource" class="example-table" matSort   (matSortChange)="sortData($event)">
 
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef></th>
@@ -82,63 +78,87 @@
     <button mat-raised-button color="primary" (click)="exportToExcel()">Export as Excel <mat-icon>table_view</mat-icon></button>
     <button mat-raised-button color="primary" (click)="exportToPdf()">Export as PDF <mat-icon>picture_as_pdf</mat-icon></button>
   </div>
+  <div style='min-height:800px' *ngIf='showChartsTabs' >
+    <mat-tab-group class="example-container2 mat-elevation-z8" mat-align-tabs="center" *ngIf='showChartsTabs' style="margin-top: 5%; margin-bottom: 3%; background-color: #6e396a; border: solid; border-color: black; border-radius: 10px;">
+      <mat-tab label="Active">
+        <canvas baseChart 
+            [datasets]="lineChartDataActive" 
+            [labels]="lineChartLabelsActive" 
+            [options]="lineChartOptions"
+            [colors]="lineChartColorsActive" 
+            [legend]="lineChartLegend" 
+            [chartType]="lineChartType" 
+            [plugins]="lineChartPlugins">
+        </canvas>
+      </mat-tab>
+    
+      <mat-tab label="Total Deaths" >
+        <canvas baseChart 
+            [datasets]="lineChartDataDeaths" 
+            [labels]="lineChartLabelsDeaths" 
+            [options]="lineChartOptions"
+            [colors]="lineChartColorsNewDeaths" 
+            [legend]="lineChartLegend" 
+            [chartType]="lineChartType" 
+            [plugins]="lineChartPlugins">
+        </canvas>
+      </mat-tab>
+      <mat-tab label="Total Recovered">
+        <canvas baseChart 
+            [datasets]="lineChartDataRecovered" 
+            [labels]="lineChartLabelsRecovered" 
+            [options]="lineChartOptions"
+            [colors]="lineChartColorsNewRecovered" 
+            [legend]="lineChartLegend" 
+            [chartType]="lineChartType" 
+            [plugins]="lineChartPlugins">
+        </canvas>
+      </mat-tab>
+      </mat-tab-group>
+  </div>
   
 
-  <!-- <div *ngIf='chartshow' class="example-container2 mat-elevation-z8">
-    <canvas baseChart 
-        [datasets]="lineChartData" 
-        [labels]="lineChartLabels" 
-        [options]="lineChartOptions"
-        [colors]="lineChartColors" 
-        [legend]="lineChartLegend" 
-        [chartType]="lineChartType" 
-        [plugins]="lineChartPlugins">
-    </canvas>
-  </div> -->
-  <mat-tab-group class="example-container2 mat-elevation-z8" mat-align-tabs="center" *ngIf='showChartsTabs' style="margin-top: 5%; margin-bottom: 3%; background-color: #6e396a; border: solid; border-color: black; border-radius: 10px;">
-  <mat-tab label="Active">
-    <canvas baseChart *ngIf='showChartActive'
-        [datasets]="lineChartDataActive" 
-        [labels]="lineChartLabelsActive" 
-        [options]="lineChartOptions"
-        [colors]="lineChartColorsActive" 
-        [legend]="lineChartLegend" 
-        [chartType]="lineChartType" 
-        [plugins]="lineChartPlugins">
-    </canvas>
-  </mat-tab>
-  <!-- <mat-tab label="Confirmed & Recovered & Deaths">
-    <canvas baseChart *ngIf='showChartConfirmed'
-        [datasets]="lineChartDataConfirmed" 
-        [labels]="lineChartLabelsConfirmed" 
-        [options]="lineChartOptions"
-        [colors]="lineChartColors" 
-        [legend]="lineChartLegend" 
-        [chartType]="lineChartType" 
-        [plugins]="lineChartPlugins">
-    </canvas>
-  </mat-tab> -->
-  <mat-tab label="New Deaths">
-    <canvas baseChart *ngIf='showChartDeaths'
-        [datasets]="lineChartDataDeaths" 
-        [labels]="lineChartLabelsDeaths" 
-        [options]="lineChartOptions"
-        [colors]="lineChartColorsNewDeaths" 
-        [legend]="lineChartLegend" 
-        [chartType]="lineChartType" 
-        [plugins]="lineChartPlugins">
-    </canvas>
-  </mat-tab>
-  <mat-tab label="New Recovered">
-    <canvas baseChart *ngIf='showChartRecovered'
-        [datasets]="lineChartDataRecovered" 
-        [labels]="lineChartLabelsRecovered" 
-        [options]="lineChartOptions"
-        [colors]="lineChartColorsNewRecovered" 
-        [legend]="lineChartLegend" 
-        [chartType]="lineChartType" 
-        [plugins]="lineChartPlugins">
-    </canvas>
-  </mat-tab>
-  </mat-tab-group>
+  <div style="display: none;" class="example-table-container" #TABLE>
 
+    <table mat-table [dataSource]="dataSourceHidden" class="example-table"  #table >
+
+      <ng-container matColumnDef="Country">
+        <th mat-header-cell *matHeaderCellDef>Country</th>
+        <td mat-cell *matCellDef="let row">{{row.Country}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Total confirmed">
+        <th mat-header-cell *matHeaderCellDef>Total confirmed</th>
+        <td mat-cell *matCellDef="let row">{{row.TotalConfirmed}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="New confirmed">
+        <th mat-header-cell *matHeaderCellDef>New confirmed</th>
+        <td mat-cell *matCellDef="let row">{{row.NewConfirmed}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Total deaths">
+        <th mat-header-cell *matHeaderCellDef  >Total deaths</th>
+        <td mat-cell *matCellDef="let row">{{row.TotalDeaths}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="New deaths">
+        <th mat-header-cell *matHeaderCellDef >New deaths</th>
+        <td mat-cell *matCellDef="let row">{{row.NewDeaths}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Total recovered">
+        <th mat-header-cell *matHeaderCellDef>Total recovered</th>
+        <td mat-cell *matCellDef="let row">{{row.TotalRecovered}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="New recovered">
+        <th mat-header-cell *matHeaderCellDef >New recovered</th>
+        <td mat-cell *matCellDef="let row">{{row.NewRecovered}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsHidden; sticky: true" ></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsHidden;" ></tr>
+    </table>
+    
+  </div>
